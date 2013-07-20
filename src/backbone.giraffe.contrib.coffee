@@ -6,8 +6,9 @@ Contrib = Giraffe.Contrib = {}
 *
 *  var FruitsView = Giraffe.Contrib.CollectionView.extend({
 *    itemView: FruitView,
-*    collection: someCollection
 *  });
+*
+*  var view = new FruitsView({collection: []});
 ###
 
 class Contrib.CollectionView extends Giraffe.View
@@ -15,6 +16,7 @@ class Contrib.CollectionView extends Giraffe.View
     @listenTo options.collection, 'add', @_onAdd
     @listenTo options.collection, 'remove', @_onRemove
     @listenTo options.collection, 'reset', @_onReset
+    @listenTo options.collection, 'sort', @_onSort
     @ItemView = @itemView
     super
 
@@ -36,7 +38,11 @@ class Contrib.CollectionView extends Giraffe.View
 
 
   _onReset: ->
-    console.log 'reset'
+    @removeChildren()
+    @afterRender()
+
+
+  _onSort: ->
     @removeChildren()
     @afterRender()
 

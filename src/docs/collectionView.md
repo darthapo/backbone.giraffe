@@ -89,10 +89,10 @@ and assign it to an instance of `FruitsView`.
 
 ```js
 var savoryFruits = [
+    {name: 'Orange', color: '#FF7F00'},
+    {name: 'Pink Grapefruit', color: '#C5363A'},
     {name: 'Apple', color: '#0F0'},
     {name: 'Banana', color: '#FF0'},
-    {name: 'Orange', color: '#FF7F00'},
-    {name: 'Pink Grapefruit', color: '#C5363A'}
 ];
 
 var fruits = new Fruits(savoryFruits);
@@ -102,16 +102,19 @@ var fruitsView = new FruitsView({
 });
 ```
 
-Let's also give the user the ability to `reset` fruits at
-any time. This button needs to be outside of the collection view otherwise
-the button would get diposed when the collection view resets its children.
+## Resetting and Sorting
 
-To keep things tidy, let's create a main view to contain the button and
-collection view.
+Let's also give the user the ability to `reset` and `sort` fruits at
+any time. The buttons need to be outside of the collection view otherwise
+they would be disposed when the view resets its children.
+
+Let's put the buttons in another view to keep things tidy.
 
 ```html
 <script id='main-template' type='text/template'>
   <button data-gf-click='onClickReset'>reset</button>
+  <button data-gf-click='onClickSort'>sort</button>
+  <hr />
   <!-- fruits view is appended here in afterRender -->
 </script>
 ```
@@ -122,6 +125,25 @@ var MainView = Giraffe.View.extend({
 
   onClickReset: function() {
     fruitsView.collection.reset(savoryFruits);
+  },
+
+  onClickSort: function() {
+    var comparator = fruitsView.collection.comparator;
+
+    // Revere string order isn't as simple as prefixing with '-'. See
+    // http://stackoverflow.com/a/5639070. Collection.reverse() not a good idea
+    // which would not sort properly when adding/removing items
+    if (typeof comparator === 'string') {
+      comparator = function(fruit) {
+        return String.fromCharCode.apply(String, _.map(fruit.get("name").split(""), function (c) {
+            return 0xffff - c.charCodeAt();
+        }));
+      }
+    } else {
+      comparator = 'name';
+    }
+    fruitsView.collection.comparator = comparator;
+    fruitsView.collection.sort();
   },
 
   afterRender: function() {
@@ -145,6 +167,11 @@ h2 {
   padding: 10px;
   margin: 10px;
 }
+hr {
+  border: 0;
+  height: 0;
+  border-top: 1px dashed #ccc;
+}
 ```
 
 {{{COMMON}}}
@@ -158,6 +185,8 @@ None-core goodies are added to `Backbone.Giraffe.Contrib`, short for contributio
 ```html
   <script src="../backbone.giraffe.contrib.js" type="text/javascript"></script>
 ```
+
+## Live Example
 
 Voila! Tutty-fruity
 

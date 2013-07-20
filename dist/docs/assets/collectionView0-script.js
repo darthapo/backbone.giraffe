@@ -36,10 +36,10 @@ var FruitsView = Giraffe.Contrib.CollectionView.extend({
 });
 
 var savoryFruits = [
+    {name: 'Orange', color: '#FF7F00'},
+    {name: 'Pink Grapefruit', color: '#C5363A'},
     {name: 'Apple', color: '#0F0'},
     {name: 'Banana', color: '#FF0'},
-    {name: 'Orange', color: '#FF7F00'},
-    {name: 'Pink Grapefruit', color: '#C5363A'}
 ];
 
 var fruits = new Fruits(savoryFruits);
@@ -53,6 +53,25 @@ var MainView = Giraffe.View.extend({
 
   onClickReset: function() {
     fruitsView.collection.reset(savoryFruits);
+  },
+
+  onClickSort: function() {
+    var comparator = fruitsView.collection.comparator;
+
+    // Revere string order isn't as simple as prefixing with '-'. See
+    // http://stackoverflow.com/a/5639070. Collection.reverse() not a good idea
+    // which would not sort properly when adding/removing items
+    if (typeof comparator === 'string') {
+      comparator = function(fruit) {
+        return String.fromCharCode.apply(String, _.map(fruit.get("name").split(""), function (c) {
+            return 0xffff - c.charCodeAt();
+        }));
+      }
+    } else {
+      comparator = 'name';
+    }
+    fruitsView.collection.comparator = comparator;
+    fruitsView.collection.sort();
   },
 
   afterRender: function() {

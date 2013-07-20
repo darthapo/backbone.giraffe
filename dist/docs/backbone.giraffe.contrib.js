@@ -11,8 +11,9 @@
   *
   *  var FruitsView = Giraffe.Contrib.CollectionView.extend({
   *    itemView: FruitView,
-  *    collection: someCollection
   *  });
+  *
+  *  var view = new FruitsView({collection: []});
   */
 
 
@@ -23,6 +24,7 @@
       this.listenTo(options.collection, 'add', this._onAdd);
       this.listenTo(options.collection, 'remove', this._onRemove);
       this.listenTo(options.collection, 'reset', this._onReset);
+      this.listenTo(options.collection, 'sort', this._onSort);
       this.ItemView = this.itemView;
       CollectionView.__super__.constructor.apply(this, arguments);
     }
@@ -45,7 +47,11 @@
     };
 
     CollectionView.prototype._onReset = function() {
-      console.log('reset');
+      this.removeChildren();
+      return this.afterRender();
+    };
+
+    CollectionView.prototype._onSort = function() {
       this.removeChildren();
       return this.afterRender();
     };
