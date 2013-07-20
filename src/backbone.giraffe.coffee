@@ -4,20 +4,10 @@
 # Barc Permissive License
 #===============================================================================
 
-
-if global?
-  Backbone = require('backbone')
-  $ = require('jQuery')
-else
-  Backbone = window.Backbone
-  $ = Backbone.$
-
-
-Backbone.Giraffe = Giraffe =
+Backbone.Giraffe = window.Giraffe = Giraffe =
   app: null # stores the most recently created instance of App, so for simple cases with 1 app Giraffe objects don't need an app reference
   apps: {} # cache for all app views by `options.name`, defaulting to `cid`
   views: {} # cache for all views by `cid`
-window?.Giraffe = Giraffe
 
 
 # A helper function for more helpful error messages.
@@ -1373,9 +1363,3 @@ _setEventMapBindings = (contextObj, targetObj, eventMap, bindOrUnbindFnName) ->
 
 
 
-# TODO
-# route namespaces
-# more events like disposing/disposed? rendering/rendered, attaching/attached - replace before/afterRender?
-# view transitions
-# collectionView?
-# modelView?

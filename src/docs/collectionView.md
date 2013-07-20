@@ -1,16 +1,15 @@
-# Implement CollectionView
+# Giraffe.Contrib.CollectionView
 
-CollectionView and ItemView are classes often found in other Backbone
-frameworks. This example details how to implement this pattern in __Giraffe__
-by rendering a collection of savory colored fruits.
+This example details how to implement a collection of items by rendering a
+collection of savory colored fruits.
 
 :::BEGIN Example
 
 ## Collection and Model
 
-Defining the model and collection is the same as in __Backbone__.
-Any __Giraffe.Model__ is automatically tracked for dispoal when assigned to
-a __Giraffe.View__.
+To start, define the model and collection representing the fruits, which is
+the same as in __Backbone__. The advantage of using __Giraffe.Model__ is it adds a few helper methods
+such as `Model#dispose`.
 
 ```js
 var Fruit = Giraffe.Model.extend({
@@ -28,8 +27,7 @@ var Fruits = Giraffe.Collection.extend({
 
 ## Item View
 
-In __Giraffe__ views are composable. A collection view can be implemented
-simply by attaching one or more views to a view.
+Each fruit is rendered by a `FruitView`.
 
 ```js
 var FruitView = Giraffe.View.extend({
@@ -45,21 +43,22 @@ var FruitView = Giraffe.View.extend({
 ```
 
 We could cheat and call `this.dispose()` here. By modifying the collection
-instead, any view observing the collection is notified.
+instead, any view observing the collection is notified. `Contrib.CollectionView`
+observes collection changes and modifies its item views accordingly.
 
 ```js
-  onClone: function() {
-    this.model.collection.add(this.model.clone());
-  },
-
   onDelete: function() {
     // Giraffe method which also removes it from the collection
     this.model.dispose();
+  },
+
+  onClone: function() {
+    this.model.collection.add(this.model.clone());
   }
 });
 ```
 
-Add a delete and clone button to manually modify the collection.
+Add a delete and clone button to allow users to manually modify the collection.
 
 ```html
 <script id='fruit-template' type='text/template'>
@@ -73,86 +72,62 @@ Add a delete and clone button to manually modify the collection.
 
 ## Collection View
 
-A collection view reacts to changes on its collection, thus the
-view needs handlers for `add` and `remove` events. The
-`dataEvents` property facilitates assigning handlers.
+Let's use `CollectionView` goody from `Giraffe.Contrib`.
 
 ```js
-var FruitsView = Giraffe.View.extend({
-  dataEvents: {
-    'add collection': 'onAddItem',
-    'remove collection': 'onRemoveItem'
-  },
-```
-
-<div class='note'>
-  <p>
-    Consider `dataEvents` property unstable. One of our smart interns found a common
-    use case where events do not trigger. That is, if you modify a model/collection
-    in the `initialize` method, event listeners have not yet been assigned and
-    expected events do not fire.
-  </p>
-  <p>
-    We may obsolete this property altogether as it could lead to [astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment).
-  </p>
-</div>
-
-
-Let's do something more than just appending the item to the collection. Add a new item after the view which was just
-clicked.
-
-```js
-  getAttachOptions: function(fruit) {
-    var index = this.collection.indexOf(fruit);
-    var options = {method: 'prepend'};
-    if (index > 0) {
-      options.method = 'after';
-      var pred = this.collection.at(index - 1);
-      var predView = _.findWhere(this.children, {model: pred});
-      options.el = predView;
-    }
-    return options;
-  },
-
-  onAddItem: function(fruit) {
-    var itemView = new FruitView({model: fruit});
-    var options = this.getAttachOptions(fruit);
-    this.attach(itemView, options);
-  },
-
-  onRemoveItem: function(fruit) {
-    var itemView = _.findWhere(this.children, {model: fruit});
-    itemView.dispose();
-  },
-```
-
-Child items must be added _after_ this collection view has rendered itself.
-
-```js
-  afterRender: function() {
-    var my = this;
-    this.collection.each(function(item) {
-      my.onAddItem(item, my.collection);
-    });
-  }
+var FruitsView = Giraffe.Contrib.CollectionView.extend({
+  itemView: FruitView
 });
 ```
 
-Let's create tasty fruits and attach the collection view to the page.
+Let's create some tasty fruits and create an instance of `Fruits` collection
+and assign it to an instance of `FruitsView`.
 
 ```js
-var fruits = new Fruits([
-  {name: 'Apple', color: '#0F0'},
-  {name: 'Banana', color: '#FF0'},
-  {name: 'Orange', color: '#FF7F00'},
-  {name: 'Pink Grapefruit', color: '#C5363A'}
-]);
+var savoryFruits = [
+    {name: 'Apple', color: '#0F0'},
+    {name: 'Banana', color: '#FF0'},
+    {name: 'Orange', color: '#FF7F00'},
+    {name: 'Pink Grapefruit', color: '#C5363A'}
+];
+
+var fruits = new Fruits(savoryFruits);
 
 var fruitsView = new FruitsView({
   collection: fruits
 });
+```
 
-fruitsView.attachTo('body');
+Let's also give the user the ability to `reset` fruits at
+any time. This button needs to be outside of the collection view otherwise
+the button would get diposed when the collection view resets its children.
+
+To keep things tidy, let's create a main view to contain the button and
+collection view.
+
+```html
+<script id='main-template' type='text/template'>
+  <button data-gf-click='onClickReset'>reset</button>
+  <!-- fruits view is appended here in afterRender -->
+</script>
+```
+
+```js
+var MainView = Giraffe.View.extend({
+  template: '#main-template',
+
+  onClickReset: function() {
+    fruitsView.collection.reset(savoryFruits);
+  },
+
+  afterRender: function() {
+    this.attach(fruitsView, {method: 'append'});
+  }
+});
+
+var mainView = new MainView();
+
+mainView.attachTo('body');
 ```
 
 :::@ --hide
@@ -170,7 +145,17 @@ h2 {
 
 {{{COMMON}}}
 
-Voila! Fruitty-tutty
+We need to source the  `Backbone.Giraffe.Contrib` library which defines `Giraffe.CollectionView`.
+
+<div class='note'>
+None-core goodies are added to `Backbone.Giraffe.Contrib`, short for contributions.
+</div>
+
+```html
+  <script src="../backbone.giraffe.contrib.js" type="text/javascript"></script>
+```
+
+Voila! Tutty-fruity
 
 {{{EXAMPLE style='height: 340px'}}}
 

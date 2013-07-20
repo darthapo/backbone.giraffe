@@ -21,62 +21,45 @@ var FruitView = Giraffe.View.extend({
     return this.model.toJSON()
   },
 
-  onClone: function() {
-    this.model.collection.add(this.model.clone());
-  },
-
   onDelete: function() {
     // Giraffe method which also removes it from the collection
     this.model.dispose();
+  },
+
+  onClone: function() {
+    this.model.collection.add(this.model.clone());
   }
 });
 
-var FruitsView = Giraffe.View.extend({
-  dataEvents: {
-    'add collection': 'onAddItem',
-    'remove collection': 'onRemoveItem'
-  },
-
-  getAttachOptions: function(fruit) {
-    var index = this.collection.indexOf(fruit);
-    var options = {method: 'prepend'};
-    if (index > 0) {
-      options.method = 'after';
-      var pred = this.collection.at(index - 1);
-      var predView = _.findWhere(this.children, {model: pred});
-      options.el = predView;
-    }
-    return options;
-  },
-
-  onAddItem: function(fruit) {
-    var itemView = new FruitView({model: fruit});
-    var options = this.getAttachOptions(fruit);
-    this.attach(itemView, options);
-  },
-
-  onRemoveItem: function(fruit) {
-    var itemView = _.findWhere(this.children, {model: fruit});
-    itemView.dispose();
-  },
-
-  afterRender: function() {
-    var my = this;
-    this.collection.each(function(item) {
-      my.onAddItem(item, my.collection);
-    });
-  }
+var FruitsView = Giraffe.Contrib.CollectionView.extend({
+  itemView: FruitView
 });
 
-var fruits = new Fruits([
-  {name: 'Apple', color: '#0F0'},
-  {name: 'Banana', color: '#FF0'},
-  {name: 'Orange', color: '#FF7F00'},
-  {name: 'Pink Grapefruit', color: '#C5363A'}
-]);
+var savoryFruits = [
+    {name: 'Apple', color: '#0F0'},
+    {name: 'Banana', color: '#FF0'},
+    {name: 'Orange', color: '#FF7F00'},
+    {name: 'Pink Grapefruit', color: '#C5363A'}
+];
+
+var fruits = new Fruits(savoryFruits);
 
 var fruitsView = new FruitsView({
   collection: fruits
 });
 
-fruitsView.attachTo('body');
+var MainView = Giraffe.View.extend({
+  template: '#main-template',
+
+  onClickReset: function() {
+    fruitsView.collection.reset(savoryFruits);
+  },
+
+  afterRender: function() {
+    this.attach(fruitsView, {method: 'append'});
+  }
+});
+
+var mainView = new MainView();
+
+mainView.attachTo('body');
