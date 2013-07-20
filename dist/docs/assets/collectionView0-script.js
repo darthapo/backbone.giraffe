@@ -59,13 +59,15 @@ var MainView = Giraffe.View.extend({
     var comparator = fruitsView.collection.comparator;
 
     // Revere string order isn't as simple as prefixing with '-'. See
-    // http://stackoverflow.com/a/5639070. Collection.reverse() not a good idea
-    // which would not sort properly when adding/removing items
+    // http://stackoverflow.com/a/5639070. Collection.reverse() is not a  good
+    // idea as the collection would not properly sort on add/remove.
     if (typeof comparator === 'string') {
       comparator = function(fruit) {
-        return String.fromCharCode.apply(String, _.map(fruit.get("name").split(""), function (c) {
+        return String.fromCharCode.apply(String, _.map(fruit.get("name").split(""),
+          function (c) {
             return 0xffff - c.charCodeAt();
-        }));
+          }
+        ));
       }
     } else {
       comparator = 'name';

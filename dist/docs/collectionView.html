@@ -142,13 +142,15 @@ they would be disposed when the view resets its children.</p>
     <span class="keyword">var</span> comparator = fruitsView.collection.comparator;
 
     <span class="comment">// Revere string order isn't as simple as prefixing with '-'. See</span>
-    <span class="comment">// http://stackoverflow.com/a/5639070. Collection.reverse() not a good idea</span>
-    <span class="comment">// which would not sort properly when adding/removing items</span>
+    <span class="comment">// http://stackoverflow.com/a/5639070. Collection.reverse() is not a  good</span>
+    <span class="comment">// idea as the collection would not properly sort on add/remove.</span>
     <span class="keyword">if</span> (<span class="keyword">typeof</span> comparator === <span class="string">'string'</span>) {
       comparator = <span class="function"><span class="keyword">function</span><span class="params">(fruit)</span> {</span>
-        <span class="keyword">return</span> String.fromCharCode.apply(String, _.map(fruit.get(<span class="string">"name"</span>).split(<span class="string">""</span>), <span class="function"><span class="keyword">function</span> <span class="params">(c)</span> {</span>
+        <span class="keyword">return</span> String.fromCharCode.apply(String, _.map(fruit.get(<span class="string">"name"</span>).split(<span class="string">""</span>),
+          <span class="function"><span class="keyword">function</span> <span class="params">(c)</span> {</span>
             <span class="keyword">return</span> <span class="number">0xffff</span> - c.charCodeAt();
-        }));
+          }
+        ));
       }
     } <span class="keyword">else</span> {
       comparator = <span class="string">'name'</span>;
@@ -266,13 +268,15 @@ None-core goodies are added to <code>Backbone.Giraffe.Contrib</code>, short for 
     <span class="keyword">var</span> comparator = fruitsView.collection.comparator;
 
     <span class="comment">// Revere string order isn't as simple as prefixing with '-'. See</span>
-    <span class="comment">// http://stackoverflow.com/a/5639070. Collection.reverse() not a good idea</span>
-    <span class="comment">// which would not sort properly when adding/removing items</span>
+    <span class="comment">// http://stackoverflow.com/a/5639070. Collection.reverse() is not a  good</span>
+    <span class="comment">// idea as the collection would not properly sort on add/remove.</span>
     <span class="keyword">if</span> (<span class="keyword">typeof</span> comparator === <span class="string">'string'</span>) {
       comparator = <span class="function"><span class="keyword">function</span><span class="params">(fruit)</span> {</span>
-        <span class="keyword">return</span> String.fromCharCode.apply(String, _.map(fruit.get(<span class="string">"name"</span>).split(<span class="string">""</span>), <span class="function"><span class="keyword">function</span><span class="params">(c)</span> {</span>
-          <span class="keyword">return</span> <span class="number">0xffff</span> - c.charCodeAt();
-        }));
+        <span class="keyword">return</span> String.fromCharCode.apply(String, _.map(fruit.get(<span class="string">"name"</span>).split(<span class="string">""</span>),
+          <span class="function"><span class="keyword">function</span><span class="params">(c)</span> {</span>
+            <span class="keyword">return</span> <span class="number">0xffff</span> - c.charCodeAt();
+          }
+        ));
       }
     } <span class="keyword">else</span> {
       comparator = <span class="string">'name'</span>;
