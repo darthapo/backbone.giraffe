@@ -1,15 +1,15 @@
 # Giraffe.Contrib.CollectionView
 
-This example details how to implement a collection of items by rendering a
-collection of savory colored fruits.
+This example details how to use `Giraffe.Contrib` to iplement views for a
+collection of items. The example is fairly simple rendering several savory colored fruits.
 
 :::BEGIN Example
 
 ## Collection and Model
 
-To start, define the model and collection representing the fruits, which is
-the same as in __Backbone__. The advantage of using __Giraffe.Model__ is it adds a few helper methods
-such as `Model#dispose`.
+To start, define the model and collection representing the fruits. The steps
+are the same as generic __Backbone__. The advantage of using __Giraffe.Model__ is
+the addition of a few methods such as `Model#dispose`.
 
 ```js
 var Fruit = Giraffe.Model.extend({
@@ -27,7 +27,8 @@ var Fruits = Giraffe.Collection.extend({
 
 ## Item View
 
-Each fruit is rendered by a `FruitView`.
+Instead of generating markup for each fruit in a single view, it's more
+maintainable to create a view representing the items in the collection.
 
 ```js
 var FruitView = Giraffe.View.extend({
@@ -72,7 +73,10 @@ Add a delete and clone button to allow users to manually modify the collection.
 
 ## Collection View
 
-Let's use `CollectionView` goody from `Giraffe.Contrib`.
+Let's use `CollectionView` goody from `Giraffe.Contrib`. The `CollectionView`
+adds and removes fruit views to itself as it observes changes on its
+collection. It is good practice to __always__ modify the collection
+instead of trying to add views manually.
 
 ```js
 var FruitsView = Giraffe.Contrib.CollectionView.extend({
@@ -157,6 +161,6 @@ None-core goodies are added to `Backbone.Giraffe.Contrib`, short for contributio
 
 Voila! Tutty-fruity
 
-{{{EXAMPLE style='height: 340px'}}}
+{{{EXAMPLE style='height: 375px'}}}
 
 :::END

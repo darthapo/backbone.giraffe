@@ -48,12 +48,12 @@
           <img id="logo" src="img/logo.png" />
         </a>
         <h1 id='h-giraffecontribcollectionview'>Giraffe.Contrib.CollectionView</h1>
-<p>This example details how to implement a collection of items by rendering a
-collection of savory colored fruits.</p>
+<p>This example details how to use <code>Giraffe.Contrib</code> to iplement views for a
+collection of items. The example is fairly simple rendering several savory colored fruits.</p>
 <p><div class='section-example'><h2 id='h-collection-and-model'>Collection and Model</h2>
-<p>To start, define the model and collection representing the fruits, which is
-the same as in <strong>Backbone</strong>. The advantage of using <strong>Giraffe.Model</strong> is it adds a few helper methods
-such as <code>Model#dispose</code>.</p>
+<p>To start, define the model and collection representing the fruits. The steps
+are the same as generic <strong>Backbone</strong>. The advantage of using <strong>Giraffe.Model</strong> is
+the addition of a few methods such as <code>Model#dispose</code>.</p>
 <pre><code class="js"><span class="keyword">var</span> Fruit = Giraffe.Model.extend({
   defaults: {
     name: <span class="literal">null</span>,
@@ -66,7 +66,8 @@ such as <code>Model#dispose</code>.</p>
   comparator: <span class="string">'name'</span>
 });</code></pre>
 <h2 id='h-item-view'>Item View</h2>
-<p>Each fruit is rendered by a <code>FruitView</code>.</p>
+<p>Instead of generating markup for each fruit in a single view, it&#39;s more
+maintainable to create a view representing the items in the collection.</p>
 <pre><code class="js"><span class="keyword">var</span> FruitView = Giraffe.View.extend({
   template: <span class="string">'#fruit-template'</span>,
 
@@ -98,7 +99,10 @@ observes collection changes and modifies its item views accordingly.</p>
   <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
 <span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre>
 <h2 id='h-collection-view'>Collection View</h2>
-<p>Let&#39;s use <code>CollectionView</code> goody from <code>Giraffe.Contrib</code>.</p>
+<p>Let&#39;s use <code>CollectionView</code> goody from <code>Giraffe.Contrib</code>. The <code>CollectionView</code>
+adds and removes fruit views to itself as it observes changes on its
+collection. It is good practice to <strong>always</strong> modify the collection
+instead of trying to add views manually.</p>
 <pre><code class="js"><span class="keyword">var</span> FruitsView = Giraffe.Contrib.CollectionView.extend({
   itemView: FruitView
 });</code></pre>
@@ -170,7 +174,7 @@ None-core goodies are added to <code>Backbone.Giraffe.Contrib</code>, short for 
 </div>
 <div id="collectionview0_tabs_content" class="tabs_content">
   <div id="collectionview0result-tab" class="tab_content">
-  <iframe id="collectionview0" src="assets/collectionView0.html" class="result"  style='height: 340px'></iframe>
+  <iframe id="collectionview0" src="assets/collectionView0.html" class="result"  style='height: 375px'></iframe>
 </div><div id="collectionview0scriptjs-tab" class="tab_content">
   <pre><code class="language-js"><span class="keyword">var</span> Fruit = Giraffe.Model.extend({
   defaults: {
