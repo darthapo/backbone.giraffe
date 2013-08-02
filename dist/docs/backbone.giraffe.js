@@ -87,6 +87,7 @@
       }
       this.render = __bind(this.render, this);
       _.defaults(options, Giraffe.View.defaultOptions);
+      console.log("@app", this.app);
       this.app || (this.app = options.app || Giraffe.app);
       Giraffe.bindEventMap(this, this.app, this.appEvents);
       /*
@@ -993,6 +994,10 @@
       this.app = this;
       if (options != null ? options.routes : void 0) {
         this.routes = options.routes;
+      }
+      if (options != null ? options.appEvents : void 0) {
+        this.appEvents = options.appEvents;
+        console.log(this, this.appEvents);
       }
       this._initializers = [];
       this.started = false;

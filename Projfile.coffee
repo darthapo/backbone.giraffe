@@ -1,18 +1,6 @@
 fs = require('fs')
 async = require('async')
 
-COMMON =
-  """
-  :::@ --hide
-
-  ```html
-  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
-  <script src="../backbone.giraffe.js" type="text/javascript"></script>
-  ```
-  """
-
 exports.server =
   dirname: 'dist/'
 
@@ -20,6 +8,9 @@ exports.server =
 exports.project = (pm) ->
   {f, $, Utils} = pm
   $.registerExecutable 'git'
+  pm.filters require('pm-tutdown')
+
+  pm.load require('./Projtest.coffee'), ns: 'test'
 
   changeToDist = f.tap (asset) ->
     asset.filename = asset.filename.replace(/^src/, 'dist')
@@ -28,7 +19,7 @@ exports.project = (pm) ->
     return f.tap (asset) ->
       asset.filename = Utils.changeExtname(asset.filename, extname)
 
-  all: ['clean', 'giraffe', 'miniGiraffe', 'docs', 'stylesheets', 'staticFiles']
+  all: ['clean', 'giraffe', 'miniGiraffe', 'docs', 'stylesheets', 'staticFiles', 'test:all']
 
   giraffe:
     desc: 'Builds Giraffe'
@@ -83,9 +74,6 @@ exports.project = (pm) ->
       '!src/docs/_toc.md'
     ]
     dev: [
-      f.tap (asset) ->
-        asset.filename = asset.filename.replace(/^src/, 'dist')
-        asset.text = asset.text.replace(/{{{COMMON}}}/g, COMMON)
       f.tutdown
         templates:
           example: fs.readFileSync('src/docs/_example.mustache', 'utf8')
@@ -97,6 +85,8 @@ exports.project = (pm) ->
         delimiters: 'mustache'
         filename: 'src/docs/_layout.mustache'
         navHeader: ''
+      f.tap (asset) ->
+        asset.filename = asset.filename.replace(/^src/, 'dist')
       f.writeFile
     ]
 
@@ -144,7 +134,6 @@ exports.project = (pm) ->
 
   clean: ->
     $.rm '-rf', 'dist'
-
 
   "gh-pages":
     desc: "Creates/updates gh-pages branch"

@@ -81,7 +81,10 @@ class Giraffe.View extends Backbone.View
   constructor: (options = {}) ->
     _.defaults options, Giraffe.View.defaultOptions
 
+    console.log "@app", @app
+
     @app or= options.app or Giraffe.app
+
 
     Giraffe.bindEventMap @, @app, @appEvents
 
@@ -831,8 +834,14 @@ class Giraffe.App extends Giraffe.View
     @app = @
     if options?.routes
       @routes = options.routes
+    if options?.appEvents
+      @appEvents = options.appEvents
+      console.log @, @appEvents
     @_initializers = []
     @started = false
+
+    # if options?.appEvents
+    #   Giraffe.bindEventMap @, @app, @appEvents
     super
 
 
