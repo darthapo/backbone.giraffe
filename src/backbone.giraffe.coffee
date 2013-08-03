@@ -65,7 +65,7 @@ error = ->
 * Currently, __Giraffe__ has only one class that extends __Giraffe.View__,
 * __Giraffe.App__, which encapsulates app-wide messaging and routing.
 *
-* Like every __Giraffe__ object, __Giraffe.View__ extends each instance with
+* Like all __Giraffe__ objects, __Giraffe.View__ extends each instance with
 * every property in `options`.
 *
 * @param {Object} [options]
@@ -134,7 +134,7 @@ class Giraffe.View extends Backbone.View
 
       # Bind data events after initialize is called, so objects can be created during initialize to be bound to
       # The limits of this implementation include the fact that that events firing during `initialize`
-      #  won't be listened for, and any data objects created after `initialize` won't be bound to.
+      # won't be listened for, and any data objects created after `initialize` won't be bound to.
       @_bindDataEvents()
 
 
@@ -839,7 +839,7 @@ Giraffe.View.setDocumentEvents ['click', 'change']
 *
 * The app also provides synchronous and asynchronous initializers with `addInitializer` and `start`.
 *
-* Like every __Giraffe__ object, __Giraffe.App__ extends each instance with
+* Like all __Giraffe__ objects, __Giraffe.App__ extends each instance with
 * every property in `options`.
 *
 * @param {Object} [options]
@@ -1012,7 +1012,7 @@ class Giraffe.App extends Giraffe.View
 *     });
 *     myApp.router.triggers; // => {'my/route': 'app:event'}
 *
-* Like every __Giraffe__ object, __Giraffe.Router__ extends each instance with
+* Like all __Giraffe__ objects, __Giraffe.Router__ extends each instance with
 * every property in `options`.
 * 
 * @param {Object} [options]
@@ -1242,7 +1242,7 @@ class Giraffe.Router extends Backbone.Router
 * via `addChild`. To use this functionality in your own objects, see
 * [`Giraffe.dispose`](#dispose) and [`Giraffe.bindEventMap`](#bindEventMap).
 *
-* Like every __Giraffe__ object, __Giraffe.Model__ and __Giraffe.Collection__
+* Like all __Giraffe__ objects, __Giraffe.Model__ and __Giraffe.Collection__
 * extend each instance with every property in `options`.
 *
 * @param {Object} [attributes]
