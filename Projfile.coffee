@@ -1,6 +1,6 @@
 fs = require('fs')
 async = require('async')
-pkg = require('package.json')
+pkg = require('./package.json')
 
 exports.server =
   dirname: 'dist/'
