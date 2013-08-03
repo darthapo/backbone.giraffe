@@ -1,5 +1,6 @@
 fs = require('fs')
 async = require('async')
+pkg = require('package.json')
 
 exports.server =
   dirname: 'dist/'
@@ -19,12 +20,15 @@ exports.project = (pm) ->
     return f.tap (asset) ->
       asset.filename = Utils.changeExtname(asset.filename, extname)
 
+  updateVersion = f.tap (asset) -> asset.text = asset.text.replace('{{VERSION}}', pkg.version)
+
   all: ['clean', 'giraffe', 'miniGiraffe', 'docs', 'stylesheets', 'staticFiles', 'test:all']
 
   giraffe:
     desc: 'Builds Giraffe'
     files: 'src/backbone*.coffee'
     dev: [
+      updateVersion
       f.coffee
       f.writeFile _filename: {replace: [/^src/, 'dist']}
       f.writeFile _filename: {replace: [/^dist/, 'dist/docs']}
@@ -34,6 +38,7 @@ exports.project = (pm) ->
     desc: 'Builds Minified Giraffe'
     files: 'src/backbone*.coffee'
     dev: [
+      updateVersion
       f.coffee
       f.uglify
       f.tap (asset) ->
@@ -74,6 +79,7 @@ exports.project = (pm) ->
       '!src/docs/_toc.md'
     ]
     dev: [
+      updateVersion
       f.tutdown
         templates:
           example: fs.readFileSync('src/docs/_example.mustache', 'utf8')

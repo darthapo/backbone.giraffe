@@ -6,6 +6,7 @@
     __slice = [].slice;
 
   Backbone.Giraffe = window.Giraffe = Giraffe = {
+    version: '0.1.1',
     app: null,
     apps: {},
     views: {}
@@ -1207,7 +1208,7 @@
   *
   * Like all __Giraffe__ objects, __Giraffe.Router__ extends each instance with
   * every property in `options`.
-  * 
+  *
   * @param {Object} [options]
   */
 

@@ -83,7 +83,7 @@ __AngularJS__)
 
 ## Download
 
-__Version 0.1__
+__Version {{VERSION}}__
 
 <p>
 <a href="https://raw.github.com/barc/backbone.giraffe/master/dist/backbone.giraffe.js" class="big-button">backbone.giraffe.js</a><em class="button-size-label">54.6k</em>

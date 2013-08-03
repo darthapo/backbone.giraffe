@@ -5,6 +5,7 @@
 #===============================================================================
 
 Backbone.Giraffe = window.Giraffe = Giraffe =
+  version: '{{VERSION}}'
   app: null # stores the most recently created instance of App, so for simple cases with 1 app Giraffe objects don't need an app reference
   apps: {} # cache for all app views by `cid`
   views: {} # cache for all views by `cid`
@@ -1014,7 +1015,7 @@ class Giraffe.App extends Giraffe.View
 *
 * Like all __Giraffe__ objects, __Giraffe.Router__ extends each instance with
 * every property in `options`.
-* 
+*
 * @param {Object} [options]
 ###
 class Giraffe.Router extends Backbone.Router
