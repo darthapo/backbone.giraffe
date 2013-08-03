@@ -10,7 +10,6 @@ exports.project = (pm) ->
   {f, $, Utils} = pm
   $.registerExecutable 'git'
   pm.filters require('pm-tutdown')
-
   pm.load require('./Projtest.coffee'), ns: 'test'
 
   changeToDist = f.tap (asset) ->
